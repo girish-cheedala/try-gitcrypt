@@ -10,5 +10,6 @@ service:
   type: ClusterIP
   port: 80
 
-# Note: Secret values are in values.secret.yaml (encrypted)
+# Note: Secrets are stored in secrets/.env file (encrypted by git-crypt)
+# The .env file is read by the Secret template and mounted as volumes
 

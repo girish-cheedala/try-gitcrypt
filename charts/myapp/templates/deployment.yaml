@@ -22,15 +22,25 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          env:
-            - name: DATABASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "myapp.fullname" . }}-secrets
-                  key: database-url
-            - name: API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "myapp.fullname" . }}-secrets
-                  key: api-key
+          envFrom:
+            - secretRef:
+                name: {{ include "myapp.fullname" . }}-secrets
+          volumeMounts:
+            - name: secrets-volume
+              mountPath: /etc/secrets
+              readOnly: true
+            {{- if .Files.Get "secrets/tls-cert.pem" }}
+            - name: tls-volume
+              mountPath: /etc/secrets/tls
+              readOnly: true
+            {{- end }}
+      volumes:
+        - name: secrets-volume
+          secret:
+            secretName: {{ include "myapp.fullname" . }}-secrets
+        {{- if .Files.Get "secrets/tls-cert.pem" }}
+        - name: tls-volume
+          secret:
+            secretName: {{ include "myapp.fullname" . }}-tls
+        {{- end }}
 
