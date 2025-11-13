@@ -6,8 +6,6 @@ metadata:
   name: {{ include "myapp.fullname" . }}-config
   labels:
     {{- include "myapp.labels" . | nindent 4 }}
-data:
-  config.json: |
-{{ $configFile | indent 4 }}
+binaryData:
+  config.json: {{ $configFile | b64enc }}
 {{- end }}
-
