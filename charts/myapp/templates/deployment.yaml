@@ -22,25 +22,12 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          envFrom:
-            - secretRef:
-                name: {{ include "myapp.fullname" . }}-secrets
           volumeMounts:
-            - name: secrets-volume
-              mountPath: /etc/secrets
+            - name: config
+              mountPath: /etc/server/config.json
+              subPath: config.json
               readOnly: true
-            {{- if .Files.Get "secrets/tls-cert.pem" }}
-            - name: tls-volume
-              mountPath: /etc/secrets/tls
-              readOnly: true
-            {{- end }}
       volumes:
-        - name: secrets-volume
-          secret:
-            secretName: {{ include "myapp.fullname" . }}-secrets
-        {{- if .Files.Get "secrets/tls-cert.pem" }}
-        - name: tls-volume
-          secret:
-            secretName: {{ include "myapp.fullname" . }}-tls
-        {{- end }}
-
+        - name: config
+          configMap:
+            name: {{ include "myapp.fullname" . }}-config

@@ -1,4 +1,3 @@
-# Public values - these are NOT encrypted
 replicaCount: 1
 
 image:
@@ -9,7 +8,3 @@ image:
 service:
   type: ClusterIP
   port: 80
-
-# Note: Secrets are stored in secrets/.env file (encrypted by git-crypt)
-# The .env file is read by the Secret template and mounted as volumes
-

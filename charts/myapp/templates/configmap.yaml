@@ -1,0 +1,13 @@
+{{- $configFile := .Files.Get "files/dev/config.json" }}
+{{- if $configFile }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "myapp.fullname" . }}-config
+  labels:
+    {{- include "myapp.labels" . | nindent 4 }}
+data:
+  config.json: |
+{{ $configFile | indent 4 }}
+{{- end }}
+
